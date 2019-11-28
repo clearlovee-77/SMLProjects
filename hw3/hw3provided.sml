@@ -153,10 +153,6 @@ fun match (p : valu * pattern) =
                       end
 
 (* Q12 *)
-fun combine x list =
-    case list of
-        l::list' => [(x,l)] @ (combine x list')
-      | [] => []
-
 fun first_match v plist =
-    SOME (first_answer match (combine v plist)) handle NoAnswer => NONE
+    SOME (first_answer (fn pat => match(v,pat)) plist) handle NoAnswer => NONE
+
