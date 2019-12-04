@@ -78,6 +78,22 @@
                           [begin [vector-set! memo next-slot new-ans]
                                  [if [= next-slot [- n 1]]
                                      [set! next-slot 0]
-                                     [+ next-slot 1]]]]
+                                     [set! next-slot [+ next-slot 1]]]]]
                           new-ans]]]]]]
     f]]
+
+;11.
+[define-syntax while-less
+  [syntax-rules [do]
+    [[while-less e1 do e2]
+     [[letrec [[x e1]
+               [loop [lambda[]
+                       [let [[y e2]]
+                       [if [< y x]
+                           [begin y [loop]]
+                           #t]]]]]
+        loop]]]]]
+
+(define a 2)
+(while-less 7 do (begin (set! a (+ a 1)) (print "x") a))
+(while-less 7 do (begin (set! a (+ a 1)) (print "x") a))
