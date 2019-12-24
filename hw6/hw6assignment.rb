@@ -18,23 +18,31 @@ class MyPiece < Piece
                   [[0, 0], [0, 1], [0, 2], [0, -1], [0, -2]]],
                   rotations([[0, 0], [0, 1], [1, 0], [1, 1], [2, 1]]), # 5 1L
                   rotations([[0, 0], [0, 1], [1, 0]])]  # 3 L
-
+  Cheat_Piece = [[[[0, 0]]]]
   # your enhancements here
   
   # class method to choose the next piece
   def self.next_piece (board)
-    MyPiece.new(All_My_Pieces.sample, board)
-  end
+    if board.cheat_flag
+      board.cheat_flag = false
+      MyPiece.new(Cheat_Piece.sample, board)
+    else
+     MyPiece.new(All_My_Pieces.sample, board)
+    end
+    end
 end
 
 class MyBoard < Board
   # your enhancements here
+  attr_accessor :cheat_flag
+
   def initialize (game)
     @grid = Array.new(num_rows) {Array.new(num_columns)}
     @current_block = MyPiece.next_piece(self)
     @score = 0
     @game = game
     @delay = 500
+    @cheat_flag = false
   end
 
   def rotate180
@@ -42,6 +50,13 @@ class MyBoard < Board
       @current_block.move(0, 0, 2)
     end
     draw
+  end
+
+  def cheat
+    if @score > 100 && (@cheat_flag == false) 
+      @cheat_flag = 1
+      @score = @score - 100
+    end
   end
 
   # gets the next piece
@@ -81,6 +96,7 @@ class MyTetris < Tetris
   def key_bindings
     super()
     @root.bind('u', proc {@board.rotate180})
+    @root.bind('c', proc {@board.cheat})
   end
 end
 
