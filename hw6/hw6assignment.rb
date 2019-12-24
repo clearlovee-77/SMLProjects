@@ -53,7 +53,7 @@ class MyBoard < Board
   end
 
   def cheat
-    if @score > 100 && (@cheat_flag == false) 
+    if @score >= 100 && (@cheat_flag == false) 
       @cheat_flag = 1
       @score = @score - 100
     end
