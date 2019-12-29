@@ -203,7 +203,9 @@ fun eval_prog (e,env) =
            | Point(x,y) => Point(x+dx,y+dy)
            | Line(m,b) => Line(m,b+dy-m*dx)
            | VerticalLine(x) => VerticalLine(x+dx)
-           | LineSegment(x1,y1,x2,y2) => LineSegment(x1+dx,y1+dy,x2+dx,y2+dy))
+           | LineSegment(x1,y1,x2,y2) => LineSegment(x1+dx,y1+dy,x2+dx,y2+dy)
+           | _ => raise Impossible "bad result from shifting a non-value")
+
 (* CHANGE: Add a case for Shift expressions *)
 
 (* CHANGE: Add function preprocess_prog of type geom_exp -> geom_exp *)
@@ -214,4 +216,7 @@ fun preprocess_prog e =
                                      else if x1 > x2 orelse (y1 > y2 andalso real_close(x1, x2))
                                      then LineSegment(x2,y2,x1,y1)
                                      else e
+      | Intersect(v1,v2) => Intersect(preprocess_prog(v1),preprocess_prog(v2))
+      | Let(s,v1,v2) => Let(s,preprocess_prog(v1),preprocess_prog(v2))
+      | Shift(dx,dy,v) => Shift(dx,dy,preprocess_prog(v))
       | _ => e
