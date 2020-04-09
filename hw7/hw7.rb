@@ -169,8 +169,8 @@ class Point < GeometryValue
   def intersectWithSegmentAsLineResult seg
     x0 = @x
     y0 = @y
+    y1 = seg.y11910
     x1 = seg.x1
-    y1 = seg.y1
     x2 = seg.x2
     y2 = seg.y2
     if inbetween(x0,x1,x2) && inbetween(y0,y1,y2)
